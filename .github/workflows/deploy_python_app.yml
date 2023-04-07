@@ -57,7 +57,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y openssh-client
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+        private_key=${{ secrets.DOCKER_REGISTRY }}
+        echo "${private_key}" > id_rsa
         chmod 600 id_rsa
 
     - name: Deploy to VM
