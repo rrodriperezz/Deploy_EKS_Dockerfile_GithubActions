@@ -58,8 +58,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y openssh-client
         private_key=${{ secrets.DOCKER_REGISTRY }}
-        echo "${private_key}" > id_rsa
-        chmod 600 id_rsa
+        echo "${private_key}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
     - name: Deploy to VM
       env:
@@ -69,9 +69,8 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
-        echo $VM_USER
-        scp -i id_rsa -o StrictHostKeyChecking=no -r . $VM_USER@$VM_HOST:/tmp/challenge-devops
-        ssh -i id_rsa -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r . $VM_USER@$VM_HOST:/tmp/challenge-devops
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
           export KUBECONFIG=/root/.kube/config
           export APP_NAME="challenge-devops"
           export DOCKER_REGISTRY=${{ secrets.DOCKER_REGISTRY }}
