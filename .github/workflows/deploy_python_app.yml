@@ -69,6 +69,7 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
+        echo $VM_USER
         scp -i id_rsa -o StrictHostKeyChecking=no -r . $VM_USER@$VM_HOST:/tmp/challenge-devops
         ssh -i id_rsa -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
           export KUBECONFIG=/root/.kube/config
