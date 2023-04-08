@@ -53,20 +53,16 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/challenge-devops:latest
 
-    - name: Install and configure SSH client
-      env:
-        SSH_PRIVATE_KEY_BASE64: ${{ secrets.SSH_PRIVATE_KEY_BASE64 }}
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y openssh-client
-        mkdir ~/.ssh/
-        echo "${{ secrets.SSH_PRIVATE_KEY_BASE64 }}" | base64 --decode > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        cat ~/.ssh/id_rsa
+    - name: Setup SSH agent
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-# echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-# chmod 600 ~/.ssh/id_rsa
-# ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+    - name: Add VM to known hosts
+      env:
+        VM_HOST: ${{ secrets.VM_HOST }}
+      run: |
+        ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
 
     - name: Deploy to VM
       env:
@@ -76,8 +72,8 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r . $VM_USER@$VM_HOST:/tmp/challenge-devops
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
+        scp -o StrictHostKeyChecking=no -r . $VM_USER@$VM_HOST:/tmp/challenge-devops
+        ssh -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
           export KUBECONFIG=/root/.kube/config
           export APP_NAME="challenge-devops"
           export DOCKER_REGISTRY=${{ secrets.DOCKER_REGISTRY }}
