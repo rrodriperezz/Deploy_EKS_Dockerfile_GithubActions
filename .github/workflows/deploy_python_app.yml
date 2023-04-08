@@ -54,13 +54,15 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/challenge-devops:latest
 
     - name: Install and configure SSH client
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
         sudo apt-get update
         sudo apt-get install -y openssh-client
-        private_key="${{ secrets.SSH_PRIVATE_KEY }}"
-        echo ${{ secrets.SSH_PRIVATE_KEY }}
-        mkdir ~/.ssh/ && echo "${private_key}" > ~/.ssh/id_rsa
+        mkdir ~/.ssh/
+        echo "${SSH_PRIVATE_KEY}" | base64 --decode > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
+        cat ~/.ssh/id_rsa
 
 # echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
 # chmod 600 ~/.ssh/id_rsa
