@@ -58,6 +58,10 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    - name: Debug SSH private key
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}"
+
     - name: Add VM to known hosts
       env:
         VM_HOST: ${{ secrets.VM_HOST }}
