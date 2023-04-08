@@ -58,6 +58,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y openssh-client
         private_key="${{ secrets.SSH_PRIVATE_KEY }}"
+        echo ${{ secrets.SSH_PRIVATE_KEY }}
         mkdir ~/.ssh/ && echo "${private_key}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
@@ -73,7 +74,6 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
-        cat ~/.ssh/id_rsa && cat ~/.ssh/id_rsa
         scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r . $VM_USER@$VM_HOST:/tmp/challenge-devops
         ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
           export KUBECONFIG=/root/.kube/config
