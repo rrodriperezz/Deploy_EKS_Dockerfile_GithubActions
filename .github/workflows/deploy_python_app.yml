@@ -55,12 +55,16 @@ jobs:
 
     - name: Install and configure SSH client
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_PRIVATE: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
         sudo apt-get update
         sudo apt-get install -y openssh-client
+
+        echo $SSH_PRIVATE
+        echo ${{ SSH_PRIVATE_KEY }}
+
         mkdir ~/.ssh/
-        echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+        echo "${SSH_PRIVATE}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         cat ~/.ssh/id_rsa
 
