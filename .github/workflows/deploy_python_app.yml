@@ -1,5 +1,3 @@
-Tengo este pipeline
-
 name: CI/CD Pipeline
 
 on:
