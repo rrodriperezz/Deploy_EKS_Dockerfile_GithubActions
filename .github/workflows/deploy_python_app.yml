@@ -1,3 +1,5 @@
+Tengo este pipeline
+
 name: CI/CD Pipeline
 
 on:
@@ -58,10 +60,6 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Debug SSH private key
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}"
-
     - name: Add VM to known hosts
       env:
         VM_HOST: ${{ secrets.VM_HOST }}
@@ -76,7 +74,7 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
         IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/challenge-devops:latest
-        ssh -o StrictHostKeyChecking=no $VM_HOST "bash -s" <<-EOF
+        ssh -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
           export KUBECONFIG=/root/.kube/config
           export APP_NAME="challenge-devops"
           export DOCKER_REGISTRY=${{ secrets.DOCKER_REGISTRY }}
@@ -84,12 +82,9 @@ jobs:
           export DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
           export IMAGE_NAME="${IMAGE_NAME}"
           export APP_VERSION=latest
-
           envsubst < /root/k8s/deployment.yml.template > /root/k8s/deployment.yml
           kubectl apply -f /root/k8s/deployment.yml
           kubectl rollout status deployment/$APP_NAME
-
           envsubst < /root/k8s/service.yml.template > /root/k8s/service.yml
           kubectl apply -f /root/k8s/service.yml
-
         EOF
