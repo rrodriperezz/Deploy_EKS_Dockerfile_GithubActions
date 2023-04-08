@@ -74,12 +74,20 @@ jobs:
       run: |
         IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/challenge-devops:latest
         ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
+          sudo -i
           export KUBECONFIG=/root/.kube/config
           export APP_NAME="challenge-devops"
           export DOCKER_REGISTRY=${{ secrets.DOCKER_REGISTRY }}
           export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
           export DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
           export IMAGE_NAME="${IMAGE_NAME}"
-          kubectl set image deployment/$APP_NAME $APP_NAME=$IMAGE_NAME --record
+          export APP_VERSION=latest
+
+          envsubst < /root/k8s/deployment.yml.template > /root/k8s/deployment.yml
+          kubectl apply -f /root/k8s/deployment.yml
           kubectl rollout status deployment/$APP_NAME
+
+          envsubst < /root/k8s/service.yml.template > /root/k8s/service.yml
+          kubectl apply -f /root/k8s/service.yml
+
         EOF
