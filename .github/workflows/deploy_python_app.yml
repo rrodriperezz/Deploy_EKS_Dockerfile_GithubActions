@@ -72,7 +72,7 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
         IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/challenge-devops:latest
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $VM_HOST "bash -s" <<-EOF
+        ssh -o StrictHostKeyChecking=no $VM_HOST "bash -s" <<-EOF
           export KUBECONFIG=/root/.kube/config
           export APP_NAME="challenge-devops"
           export DOCKER_REGISTRY=${{ secrets.DOCKER_REGISTRY }}
