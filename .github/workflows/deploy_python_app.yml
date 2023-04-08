@@ -69,12 +69,10 @@ jobs:
         VM_HOST: ${{ secrets.VM_HOST }}
         VM_USER: ${{ secrets.VM_USER }}
         DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
         IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/challenge-devops:latest
-        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "bash -s" <<-EOF
-          sudo -i
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $VM_HOST "bash -s" <<-EOF
           export KUBECONFIG=/root/.kube/config
           export APP_NAME="challenge-devops"
           export DOCKER_REGISTRY=${{ secrets.DOCKER_REGISTRY }}
@@ -91,3 +89,39 @@ jobs:
           kubectl apply -f /root/k8s/service.yml
 
         EOF
+
+
+
+
+
+
+
+
+
+
+
+
+Stopped kubelet: The Kubernetes Node Agent.
+Started kubelet: The Kubernetes Node Agent.
+Flag --pod-infra-container-image has been deprecated, will be removed in 1.27. Image garbage collector will get sandbox image information from CRI.
+I0408 20:33:29.596120   12363 server.go:198] "--pod-infra-container-image will not be pruned by the image garbage collector in kubelet and should also be set in the remote runtime"
+Flag --pod-infra-container-image has been deprecated, will be removed in 1.27. Image garbage collector will get sandbox image information from CRI.
+: I0408 20:33:31.407220   12363 server.go:412] "Kubelet version" kubeletVersion="v1.26.3"
+: I0408 20:33:31.407259   12363 server.go:414] "Golang settings" GOGC="" GOMAXPROCS="" GOTRACEBACK=""
+: I0408 20:33:31.407523   12363 server.go:836] "Client rotation is on, will bootstrap in background"
+: I0408 20:33:31.466220   12363 dynamic_cafile_content.go:157] "Starting controller" name="client-ca-bundle::/etc/kubernetes/pki/ca.crt"
+: I0408 20:33:31.472124   12363 server.go:659] "--cgroups-per-qos enabled, but --cgroup-root was not specified.  defaulting to /"
+: I0408 20:33:31.472372   12363 container_manager_linux.go:267] "Container manager verified user specified cgroup-root exists" cgroupRoot=[]
+: I0408 20:33:31.472475   12363 container_manager_linux.go:272] "Creating Container Manager object based on Node Config" nodeConfig={RuntimeCgroupsName: SystemCgroupsName: KubeletCgroupsName: KubeletOOMScoreAdj:-999 ContainerRuntime: CgroupsPerQOS:true CgroupRoot:/ CgroupDriver:systemd KubeletRootDir:/var/lib/kubelet ProtectKernelDefaults:false NodeAllocatableConfig:{KubeReservedCgroupName: SystemReservedCgroupName: ReservedSystemCPUs: EnforceNodeAllocatable:map[pods:{}] KubeReserved:map[] SystemReserved:map[] HardEvictionThresholds:[{Signal:memory.available Operator:LessThan Value:{Quantity:100Mi Percentage:0} GracePeriod:0s MinReclaim:<nil>} {Signal:nodefs.available Operator:LessThan Value:{Quantity:<nil> Percentage:0.1} GracePeriod:0s MinReclaim:<nil>} {Signal:nodefs.inodesFree Operator:LessThan Value:{Quantity:<nil> Percentage:0.05} GracePeriod:0s MinR>
+: I0408 20:33:31.472507   12363 topology_manager.go:134] "Creating topology manager with policy per scope" topologyPolicyName="none" topologyScopeName="container"
+: I0408 20:33:31.472521   12363 container_manager_linux.go:308] "Creating device plugin manager"
+: I0408 20:33:31.472625   12363 state_mem.go:36] "Initialized new in-memory state store"
+: E0408 20:33:31.473161   12363 certificate_manager.go:471] kubernetes.io/kube-apiserver-client-kubelet: Failed while requesting a signed certificate from the control plane: cannot create certificate signing request: Post "https://10.0.0.83:6443/apis/certificates.k8s.io/v1/certificatesigningrequests": dial tcp 10.0.0.83:6443: connect: connection refused
+: I0408 20:33:31.473934   12363 kubelet.go:398] "Attempting to sync node with API server"
+: I0408 20:33:31.473968   12363 kubelet.go:286] "Adding static pod path" path="/etc/kubernetes/manifests"
+: I0408 20:33:31.473996   12363 kubelet.go:297] "Adding apiserver pod source"
+: I0408 20:33:31.474013   12363 apiserver.go:42] "Waiting for node sync before watching apiserver pods"
+: E0408 20:33:31.477626   12363 remote_runtime.go:145] "Version from runtime service failed" err="rpc error: code = Unavailable desc = connection closed before server preface received"
+: E0408 20:33:31.477698   12363 kuberuntime_manager.go:230] "Get runtime version failed" err="get remote runtime typed version failed: rpc error: code = Unavailable desc = connection closed before server preface received"
+: E0408 20:33:31.477729   12363 run.go:74] "command failed" err="failed to run Kubelet: failed to create kubelet: get remote runtime typed version failed: rpc error: code = Unavailable desc = connection closed before server preface received"
+kubelet.service: Main process exited, code=exited, status=1/FAILURE
