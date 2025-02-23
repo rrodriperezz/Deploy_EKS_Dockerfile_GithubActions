@@ -1,5 +1,6 @@
-# simple-app
-This a simple application.
+# Descripcion del proyecto.
+
+Proyecto sencillo utilizando Github Actions para desplegues en EKS Y Dockerfile para ejecutar una aplicacion Python
 
 ## Requirements
 
